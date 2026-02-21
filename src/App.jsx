@@ -4,6 +4,7 @@ import { AppProvider } from './context/AppContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Vehicles from './pages/Vehicles';
 import Trips from './pages/Trips';
@@ -14,9 +15,9 @@ import Analytics from './pages/Analytics';
 
 function LoadingScreen() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column', gap: 16 }}>
-      <div style={{ width: 40, height: 40, border: '3px solid rgba(59,130,246,0.2)', borderTopColor: 'var(--accent-blue)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-      <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Connecting to FleetFlow…</p>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column', gap: 16, background: '#060b18' }}>
+      <div style={{ width: 40, height: 40, border: '3px solid rgba(59,130,246,0.2)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <p style={{ color: '#64748b', fontSize: 14, fontFamily: 'Inter,sans-serif' }}>Connecting to FleetFlow…</p>
     </div>
   );
 }
@@ -39,6 +40,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={currentUser ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/register" element={currentUser ? <Navigate to="/dashboard" replace /> : <Register />} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/vehicles" element={<ProtectedRoute><Vehicles /></ProtectedRoute>} />
       <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />

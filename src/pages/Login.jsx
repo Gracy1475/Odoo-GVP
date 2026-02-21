@@ -11,33 +11,21 @@ export default function Login() {
     const [role, setRole] = useState('Manager');
     const [showPw, setShowPw] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [forgotOpen, setForgotOpen] = useState(false);
-    const [resetEmail, setResetEmail] = useState('');
-    const { login, resetPassword } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) { toast.error('Please fill in all fields'); return; }
+        if (password.length < 6) { toast.error('Password must be at least 6 characters'); return; }
         setLoading(true);
         const result = await login(email, password, role);
         setLoading(false);
         if (result.success) {
-            toast.success(result.created ? `Account created & signed in as ${role}!` : `Welcome back! Signed in as ${role}`);
+            toast.success(`Welcome! Signed in as ${role}`);
             navigate('/dashboard');
         } else {
             toast.error(result.error || 'Login failed. Check your credentials.');
-        }
-    };
-
-    const handleReset = async () => {
-        if (!resetEmail) { toast.error('Enter your email'); return; }
-        try {
-            await resetPassword(resetEmail);
-            toast.success('Password reset email sent!');
-            setForgotOpen(false);
-        } catch {
-            toast.error('Could not send reset email.');
         }
     };
 
@@ -70,8 +58,8 @@ export default function Login() {
                     ))}
                 </div>
                 <p className="login-tagline">"Optimize every mile, every driver, every rupee."</p>
-                <p className="login-hint" style={{ marginTop: 'auto', textAlign: 'left', color: 'var(--text-muted)', fontSize: 12 }}>
-                    🔥 Powered by Google Firebase · New users are auto-registered on first login.
+                <p style={{ marginTop: 'auto', color: 'var(--text-muted)', fontSize: 12 }}>
+                    🍃 Powered by MongoDB Atlas · New users are auto-registered on first login.
                 </p>
             </div>
 
@@ -109,36 +97,15 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <button type="button" className="forgot-link" onClick={() => setForgotOpen(true)}>
-                            Forgot password?
-                        </button>
-
                         <button type="submit" className="btn btn-primary w-full" disabled={loading}>
                             {loading ? <span className="spinner" /> : null}
                             {loading ? 'Signing in…' : 'Sign In to Dashboard'}
                         </button>
                     </form>
 
-                    <p className="login-hint">New user? Just enter any email + password (≥6 chars) to auto-register.</p>
+                    <p className="login-hint">New user? Just enter any email + password (≥ 6 chars) to auto-register.</p>
                 </div>
             </div>
-
-            {forgotOpen && (
-                <div className="modal-overlay" onClick={() => setForgotOpen(false)}>
-                    <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
-                        <div className="modal-header"><h2>Reset Password</h2></div>
-                        <div className="form-group">
-                            <label className="form-label">Email Address</label>
-                            <input className="form-input" type="email" placeholder="your@email.com"
-                                value={resetEmail} onChange={e => setResetEmail(e.target.value)} />
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-ghost btn-sm" onClick={() => setForgotOpen(false)}>Cancel</button>
-                            <button className="btn btn-primary btn-sm" onClick={handleReset}>Send Reset Link</button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
